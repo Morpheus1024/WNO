@@ -1,16 +1,17 @@
 #stałe potrzebne do symulacji
-const a = 0,004   # szerokość ostrza
+const a = 0.004   # szerokość ostrza
 const k = 30      # przewodność cieplna stali nierdzewnej
-const g = 9,81    # stała grawitacyjna Ziemi
-const u = 0,15    # uśredniony współczynnik tarcia dynamicznego stali nierdzewnej o lód
-const h = 0,03    # wysokość ostrza łyżwy
+const g = 9.81    # stała grawitacyjna Ziemi
+const u = 0.15    # uśredniony współczynnik tarcia dynamicznego stali nierdzewnej o lód
+const h = 0.03    # wysokość ostrza łyżwy
 const d = 7850    # średnia gęstość stali nierdzewnej
 const Cw = 500    # średnie ciepło właściwe sali nierdzewnej
 
 function deltaTemp(v, x, s, dx)
 
-    dTemp = (u*m*g*v)/(a*x*(v*d*h*Cw/s + k/dx))
-    return dTemp
+    przyrost_temperatury = (u*m*g*v)/(a*x*(v*d*h*Cw/s + k/dx))
+    println(przyrost_temperatury)
+    return przyrost_temperatury
 end
 
 # pobieranie zmiennych symulacyjnych od użytkonika
@@ -25,13 +26,25 @@ s = parse(Float32, readline())
 print("Prędkość z jaką porusza się łyżwiarz [m/s]: ")
 v = parse(Float32, readline())
 
-T = Vector{1000}
-for i = 1:1000
-    if i==1
-        T[i] = T0 + deltaTemp(v, x, s, x/1000)
-    else 
-        T[i] = deltaTemp(v, x, s, x/1000) + T[i-1]
-    end
+temp = []
+temp_na_danymm_odc_trasy = []
 
-    println(T[i])
-end
+# delta_x = x/10
+# delta_s = s/100
+global przebyta_droga = 0.1
+global dlugosc_na_ostrzu = 0.1
+
+delta_x = 1
+delta_s = 1
+
+#for i in 1:s
+    for j in 1:x
+        delta_temp = (u*m*g*v)/(a*dlugosc_na_ostrzu*(v*d*h*Cw/przebyta_droga + k/dx))
+        println(delta_temp)
+        push!(temp_na_danymm_odc_trasy, deltaTemp)
+        przebyta_droga += delta_s
+        dlugosc_na_ostrzu +=delta_x
+
+    end
+#end
+
