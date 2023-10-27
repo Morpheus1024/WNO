@@ -31,20 +31,27 @@ temp_na_danymm_odc_trasy = []
 
 # delta_x = x/10
 # delta_s = s/100
-global przebyta_droga = 0.1
-global dlugosc_na_ostrzu = 0.1
+
+#global dlugosc_na_ostrzu = 0.1
 
 delta_x = 1
 delta_s = 1
+przebyta_droga = 0
+for i in 0:s
+    for j in 0:10
 
-#for i in 1:s
-    for j in 1:x
-        delta_temp = (u*m*g*v)/(a*dlugosc_na_ostrzu*(v*d*h*Cw/przebyta_droga + k/dx))
+        if(i == 0)
+            push!(temp_na_danymm_odc_trasy, T0)
+        end
+        delta_temp = (u*m*g*v)/(a*global dlugosc_na_ostrzu*(v*d*h*Cw/ global przebyta_droga + k/dx))
         println(delta_temp)
-        push!(temp_na_danymm_odc_trasy, deltaTemp)
-        przebyta_droga += delta_s
-        dlugosc_na_ostrzu +=delta_x
-
+        # push!(temp_na_danymm_odc_trasy, deltaTemp)
+        # przebyta_droga += delta_s
+        # dlugosc_na_ostrzu +=delta_x
+        # przebyta_droga = 0.1
+        # println(przebyta_droga)
     end
+end
+print(przebyta_droga)
 #end
 
