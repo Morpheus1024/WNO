@@ -1,26 +1,23 @@
 #stałe potrzebne do symulacji
-const a = 0.004   # szerokość ostrza
+const a = 0.006   # szerokość ostrza
 const k = 30      # przewodność cieplna stali nierdzewnej
 const g = 9.81    # stała grawitacyjna Ziemi
 const u = 0.15    # uśredniony współczynnik tarcia dynamicznego stali nierdzewnej o lód
-const h = 0.03    # wysokość ostrza łyżwy
-const d = 7850    # średnia gęstość stali nierdzewnej
+const h = 0.05    # wysokość ostrza łyżwy
+const d = 7900    # średnia gęstość stali nierdzewnej
 const Cw = 500    # średnie ciepło właściwe sali nierdzewnej
+const h_O2 = 280  # współczynnik konwekcji dla przepływu powietrza
 
-function deltaTemp(v, x, s, dx)
 
-    przyrost_temperatury = (u*m*g*v)/(a*x*(v*d*h*Cw/s + k/dx))
-    println(przyrost_temperatury)
-    return przyrost_temperatury
-end
 
 # pobieranie zmiennych symulacyjnych od użytkonika
 print("Temperatura otoczenia [C]: ")
-T0 = parse(Float32, readline())
+T0 = parse(Float32, readline()) # dla uproszczenia założono, że temperatura lodu jest taka sama jak otoczenia
 print("Masa łyżwirza [kg] ")
 m = parse(Float32, readline())
 print("Długość ostrza łyżew [cm]: ")
 x = parse(Float32, readline())
+x = x/100 # zamiana na metry
 print("Długość toru jazdy [m]: ")
 s = parse(Float32, readline())
 print("Prędkość z jaką porusza się łyżwiarz [m/s]: ")
@@ -32,26 +29,27 @@ temp_na_danymm_odc_trasy = []
 # delta_x = x/10
 # delta_s = s/100
 
-#global dlugosc_na_ostrzu = 0.1
 
-delta_x = 1
-delta_s = 1
+delta_x = 0.002 #iterowanie co 2 milimetry ostrza
+delta_s = 0.1 # iterowanie co 10 cm trasy
 przebyta_droga = 0
-for i in 0:s
-    for j in 0:10
-
-        if(i == 0)
-            push!(temp_na_danymm_odc_trasy, T0)
-        end
-        delta_temp = (u*m*g*v)/(a*global dlugosc_na_ostrzu*(v*d*h*Cw/ global przebyta_droga + k/dx))
-        println(delta_temp)
-        # push!(temp_na_danymm_odc_trasy, deltaTemp)
-        # przebyta_droga += delta_s
-        # dlugosc_na_ostrzu +=delta_x
-        # przebyta_droga = 0.1
-        # println(przebyta_droga)
+dlugosc_na_ostrzu = 0
+T = T0 # warunek początkowy
+for i in 1:s*100
+    global T = T0
+    for j in 0:x*100*10
+        global dlugosc_na_ostrzu+=delta_x
+        delta_temp = (u*m*g*v - h*h_O2*(2*dlugosc_na_ostrzu+2*a)*(T-T0))/(a*dlugosc_na_ostrzu*(d*Cw*v*h/przebyta_droga + k/delta_x))
+        #print(delta_temp)
+        global T +=delta_temp
+        push!(temp_na_danymm_odc_trasy,T)
     end
+    global przebyta_droga += delta_s
+    global dlugosc_na_ostrzu =0
+    push!(temp, temp_na_danymm_odc_trasy)
+    global temp_na_danymm_odc_trasy =[]
 end
-print(przebyta_droga)
+print(temp)
+#print(temp_na_danymm_odc_trasy)
 #end
 
