@@ -15,43 +15,37 @@ print("Temperatura otoczenia [C]: ")
 T0 = parse(Float32, readline()) # dla uproszczenia założono, że temperatura lodu jest taka sama jak otoczenia
 print("Masa łyżwirza [kg] ")
 m = parse(Float32, readline())
-print("Długość ostrza łyżew [cm]: ")
-x = parse(Float32, readline())
-x = x/100 # zamiana na metry
-print("Długość toru jazdy [m]: ")
-s = parse(Float32, readline())
+print("Długość ostrza łyżew [mm] z zaokrągleniem do pełnego milimetra: ")
+x = parse(Int64, readline())
+print("Długość toru jazdy [m] z zaokrągleniem do pełnego metra: ")
+s = parse(Int32, readline())
 print("Prędkość z jaką porusza się łyżwiarz [m/s]: ")
 v = parse(Float32, readline())
 
-temp = []
-temp_na_danymm_odc_trasy = []
+temp = zeros(Int, x, s*100)
 
-# delta_x = x/10
-# delta_s = s/100
-
-
-delta_x = 0.01 #iterowanie co centymetr
+delta_x = 0.001 #iterowanie co 1 milimetr
 delta_s = 0.01 # iterowanie co 1 cm trasy
-przebyta_droga = 0
-dlugosc_na_ostrzu = 0
-
-for i in 1:s*100 
-    for j in 1:x*100
-        if i==1
-            global T = T0
+przebyta_droga = 0.0
+dlugosc_na_ostrzu = 0.0
+T = T0
+for i in 1:x 
+    for j in 1:s*100
+        if j==1
+            temp[i,j] = T0
+        else
+            global przebyta_droga +=delta_s
+            delta_temp =( u*m*g*v - h*h_O2*(2*dlugosc_na_ostrzu+2*a)*(T-T0))/(a*dlugosc_na_ostrzu*(d*Cw*v*h/przebyta_droga + k/delta_x))
+            global T +=delta_temp
+            temp[i,j] = T
         end
-        global dlugosc_na_ostrzu +=delta_x
-        delta_temp =( u*m*g*v - h*h_O2*(2*dlugosc_na_ostrzu+2*a)*(T-T0))/(a*dlugosc_na_ostrzu*(d*Cw*v*h/przebyta_droga + k/delta_x))
-        global T +=delta_temp
-        temp[j,i] = T
     end
-    # push!(temp, temp_na_danymm_odc_trasy)
-    #global temp_na_danymm_odc_trasy = []
-    global dlugosc_na_ostrzu = 0
-    global przebyta_droga +=delta_s
+
+    global przebyta_droga = 0
+    global dlugosc_na_ostrzu +=delta_x
 end
 
-print(temp)
+print(temp[10,10])
 #plot(temp, shape(temp))
 # Generowanie siatki dla wykresu 3D
 # m,n = temp.size

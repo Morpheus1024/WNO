@@ -2,13 +2,18 @@ using Plots
 #plotlyjs()  # lub pyplot() jeśli wolisz inny silnik
 
 # Przykładowa tablica 2D
-tablica = [1 2 3]
-push!(tablica, [4 5 6])
+tablica = [1 2 3; 4 5 6]
+#push!(tablica, [4 5 6])
 
 # Pobranie rozmiaru tablicy
 println(tablica)
+println(tablica[2,1])
+tablica[2,1] = 11
+println(tablica[2,1])
+
 println(m)
 println(n)
+
 # Przygotowanie danych do wykresu 3D
 x = repeat(1:m, inner=n)
 y = repeat(1:n, outer=m)
