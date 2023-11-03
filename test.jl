@@ -1,19 +1,22 @@
-# using DifferentialEquations
-# f(u, p, t) = 1.01 * u
-# u0 = 1 / 2
-# tspan = (0.0, 1.0)
-# prob = ODEProblem(f, u0, tspan)
-# sol = solve(prob, Tsit5(), reltol = 1e-8, abstol = 1e-8)
+using Plots
+#plotlyjs()  # lub pyplot() jeśli wolisz inny silnik
 
-# using Plots
-# plot(sol, linewidth = 5, title = "Solution to the linear ODE with a thick line",
-#     xaxis = "Time (t)", yaxis = "u(t) (in μm)", label = "My Thick Line!") # legend=false
-# plot!(sol.t, t -> 0.5 * exp(1.01t), lw = 3, ls = :dash, label = "True Solution!")
+# Przykładowa tablica 2D
+tablica = [1 2 3]
+push!(tablica, [4 5 6])
 
-przebyta_droga = 0  # Zadeklaruj i zainicjuj zmienną przebyta_droga na 0
+# Pobranie rozmiaru tablicy
+println(tablica)
+println(m)
+println(n)
+# Przygotowanie danych do wykresu 3D
+x = repeat(1:m, inner=n)
+y = repeat(1:n, outer=m)
+z = vec(tablica)
 
-for i in 1:5
-    global przebyta_droga += i  # Zwiększ wartość przebyta_droga o i w każdej iteracji
-end
+# Tworzenie wykresu 3D
+#p = scatter(x, y, z, zcolor=z, color=:blues, marker=:square, xlabel="Oś X", ylabel="Oś Y", zlabel="Oś Z", title="Wykres 3D")
 
-println(przebyta_droga)  # Wyświetli 15 (bo 0 + 1 + 2 + 3 + 4 + 5 = 15)
+# Jeśli chcesz dostosować skalę osi, możesz dodać odpowiednie argumenty xlim, ylim, zlim do funkcji scatter.
+
+#Plots.pdf(p,"1")
