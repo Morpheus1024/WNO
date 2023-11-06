@@ -1,12 +1,16 @@
 #stałe potrzebne do symulacji
-const a = 0.006   # szerokość ostrza
-const k = 30      # przewodność cieplna stali nierdzewnej
-const g = 9.81    # stała grawitacyjna Ziemi
-const u = 0.15    # uśredniony współczynnik tarcia dynamicznego stali nierdzewnej o lód
-const h = 0.05    # wysokość ostrza łyżwy
-const d = 7900    # średnia gęstość stali nierdzewnej
-const Cw = 500    # średnie ciepło właściwe sali nierdzewnej
-const h_O2 = 280  # współczynnik konwekcji dla przepływu powietrza
+const a = 0.006                 # szerokość ostrza
+const k = 30                    # przewodność cieplna stali nierdzewnej
+const g = 9.81                  # stała grawitacyjna Ziemi
+const u = 0.15                  # uśredniony współczynnik tarcia dynamicznego stali nierdzewnej o lód
+const H = 0.05                  # wysokość ostrza łyżwy
+const d = 7900                  # średnia gęstość stali nierdzewnej
+const Cw = 500                  # średnie ciepło właściwe sali nierdzewnej
+const h = 280                   # współczynnik konwekcji dla przepływu powietrza
+const alfa = 4.2/1000000        # dyfuzycjność cieplna stali nierdzewnej
+const sigma = 5.67/100000000    # stała Stefana Boltzmanna
+const epsilon = 0.15            # średnia właściwe emisyjności polerowane stali nierdzewnej
+
 
 using Plots
 
@@ -28,6 +32,7 @@ delta_x = 0.001 #iterowanie co 1 milimetr
 delta_s = 0.01 # iterowanie co 1 cm trasy
 przebyta_droga = 0.0
 dlugosc_na_ostrzu = 0.0
+T_poprzednie= T0
 T = T0
 for i in 1:x 
     for j in 1:s*100
@@ -35,8 +40,10 @@ for i in 1:x
             temp[i,j] = T0
         else
             global przebyta_droga +=delta_s
-            delta_temp =( u*m*g*v - h*h_O2*(2*dlugosc_na_ostrzu+2*a)*(T-T0))/(a*dlugosc_na_ostrzu*(d*Cw*v*h/przebyta_droga + k/delta_x))
+            delta_temp = (alfa*d*a*H*x*Cw*(T+T_poprzednie)+delta_x*delta_x*(u*m*g*v-h*x*H*(T-T0)-epsilon*sigma*(T*T*T*T-T0*T0*T0*T0)))/(alfa*d*a*H*x*Cw + delta_x*k*x*H)
+            global T_poprzednie = T
             global T +=delta_temp
+            
             temp[i,j] = T
         end
     end
