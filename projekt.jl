@@ -15,23 +15,28 @@ const epsilon = 0.15            # średnia właściwe emisyjności polerowane st
 using Plots
 
 # pobieranie zmiennych symulacyjnych od użytkonika
-# print("Temperatura otoczenia [C]: ")
-# T0 = parse(Float32, readline()) # dla uproszczenia założono, że temperatura lodu jest taka sama jak otoczenia
-# print("Masa łyżwirza [kg] ")
-# m = parse(Float32, readline())
-# print("Długość ostrza łyżew [mm] z zaokrągleniem do pełnego milimetra: ")
-# x = parse(Int64, readline())
-# print("Długość toru jazdy [m] z zaokrągleniem do pełnego metra: ")
-# s = parse(Int32, readline())
-# print("Prędkość z jaką porusza się łyżwiarz [m/s]: ")
-# v = parse(Float32, readline())
 
-T0 = -30
-m = 100
-x = 250
-s = 10
-v = 1
+print("Temperatura otoczenia [C]: ")
+T0 = parse(Float32, readline()) # dla uproszczenia założono, że temperatura lodu jest taka sama jak otoczenia
+while T0 > 0
+    print("TEMPERATURA MUSI BYĆ MNIEJSZA OD ZERA BY WODA BYŁA W STANIE STAŁYM. PODAJ JESZCZE RAZ: ")
+    global T0 = parse(Float32, readline()) # dla uproszczenia założono, że temperatura lodu jest taka sama jak otoczenia
+end
+print("Masa łyżwirza [kg] ")
+m = parse(Float32, readline())
+print("Długość ostrza łyżew [mm] z zaokrągleniem do pełnego milimetra: ")
+x = parse(Int64, readline())
+print("Długość toru jazdy [m] z zaokrągleniem do pełnego metra: ")
+s = parse(Int32, readline())
+print("Prędkość z jaką porusza się łyżwiarz [m/s]: ")
+v = parse(Float32, readline())
 
+# T0 = -1
+# m = 200
+# x = 100
+# s = 1
+# v = 10
+x=x/1000 # zamiana na metry
 temp = zeros(Float32, s*100)
 
 delta_x = 0.001 #iterowanie co 1 milimetr
@@ -56,26 +61,10 @@ for i in 1:s*100
     end
 end
 
-#println(temp[s*90])
-#plot(temp, shape(temp))
-# Generowanie siatki dla wykresu 3D
-# m,n = temp.size
-# println(m)
-# println(n)
-
-# Ox = repeat(1:m, inner=n)
-# Oy = repeat(1:n, outer=m)
-# Oz = vec(temp)
-
-#p = scatter(x, y, z, zcolor=z, color=:blues, marker=:square, xlabel="Oś X", ylabel="Oś Y", zlabel="Oś Z", title="Wykres 3D")
-
-#plot = scatter(Ox,Oy,Oz)
-#Plots.pdf(plot,"projekt")
-
-# Tworzenie wykresu 3D
-
 ox = repeat(1:s*100)
-
-p = plot(ox/100, temp[ox])
+p = plot(ox/100, temp[ox], title="Temperatura ostrza", legend = false, xlabel = "Droga [m]", ylabel="Temperatura [C]")
 Plots.pdf(p,"plot")
+println()
+println("   ~~~ Plik plot.pdf powinien już się pojawić ~~~   ")
+println()
 
