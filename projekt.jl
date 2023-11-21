@@ -50,7 +50,7 @@ let #https://discourse.julialang.org/t/undefined-variable-in-loop/72936
             temp[i] = T
         end
     end
-    plot_title = string("T0 = $T0 ℃, v = $v m/s, M = $m kg, ostrze - $x m")
+    plot_title = string("T0= $T0 ℃, v= $v m/s, M= $m kg, ostrze- $x m")
     ox = repeat(1:s*100)
     p = plot(ox/100, temp[ox], title=plot_title, legend = false, xlabel = "Droga [m]", ylabel="Temperatura [℃]")
     Plots.pdf(p,"plot")
