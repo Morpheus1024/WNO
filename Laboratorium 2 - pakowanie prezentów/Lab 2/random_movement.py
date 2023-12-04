@@ -46,9 +46,31 @@ def connect_points(canvas, points, indices):
         p2 = points[indices[i + 1]]
         canvas.create_line(p1.x, p1.y, p2.x, p2.y, fill="red")
 
+def update_points_animation(root, canvas, points, animation_steps):
+    if animation_steps > 0:
+        for point in points:
+            choice = random.choice([1, -1])  # randomly choose between adding or subtracting
+            point.x += choice * 2  # Add or subtract a small number to the x value
+            point.y += choice * 2  # Add or subtract a small number to the y value
+
+        canvas.delete("all")  # Clear the canvas
+        for point in points:
+            point.draw()  # Draw the updated points
+
+        hull_indices = convex_hull(points)
+        for idx in hull_indices:
+            points[idx].draw(color="red")
+
+        connect_points(canvas, points, hull_indices + [hull_indices[0]])
+
+        root.update()  # Force an update of the Tkinter window
+        time.sleep(0.05)  # Adjust the sleep duration for the desired animation speed
+
+        root.after(50, update_points_animation, root, canvas, points, animation_steps - 1)
+
 def main():
     root = tk.Tk()
-    root.title("Random Points with Convex Hull")
+    root.title("Animated Convex Hull")
 
     canvas = tk.Canvas(root, width=400, height=400, bg="white")
     canvas.pack()
@@ -59,15 +81,7 @@ def main():
     for point in points:
         point.draw()
 
-    # Find convex hull
-    hull_indices = convex_hull(points)
-
-    # Draw convex hull points
-    for idx in hull_indices:
-        points[idx].draw(color="red")
-
-    # Connect convex hull points
-    connect_points(canvas, points, hull_indices + [hull_indices[0]])
+    root.after(1000, update_points_animation, root, canvas, points, 50)  # Start animation after 1 second
 
     root.mainloop()
 
